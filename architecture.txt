@@ -1,0 +1,7 @@
+WEB/
+│
+├── web.py                # Fichier principal Streamlit
+├── data/                 # Dossier pour les fichiers de données (CSV, JSON, etc.)
+├── utils/                # Dossier pour les fonctions et scripts utilitaires
+│   └── fonctions.py      # Fichier contenant des fonctions auxiliaires
+└── requirements.txt      # Dépendances Python
