@@ -1,57 +1,59 @@
 import streamlit as st
-import pandas as pd
-import matplotlib.pyplot as plt
+from PIL import Image
+import os
 
 # Configuration de la page
 st.set_page_config(
-    page_title="Application Streamlit Exemple",
-    page_icon="📊",
+    page_title="Galerie d'Images IA",
+    page_icon="🖼️",
     layout="wide",
 )
 
-# Titre de l'application
-st.title("Application Interactive avec Streamlit 🎉")
+# Titre de la page
+st.title("🌟 Galerie d'Images Générées par Intelligence Artificielle 🌟")
 
-# Section 1 : Charger et afficher des données
-st.header("1. Charger et Afficher des Données")
-uploaded_file = st.file_uploader("Chargez un fichier CSV :", type=["csv"])
-if uploaded_file is not None:
-    data = pd.read_csv(uploaded_file)
-    st.write("Aperçu des données :")
-    st.dataframe(data)
+# Introduction
+st.markdown("""
+Bienvenue sur cette vitrine interactive ! Ici, vous pouvez explorer des créations uniques générées par intelligence artificielle. 
+Chaque image est une œuvre d'art créée avec des algorithmes avancés. Profitez de la galerie ci-dessous et téléchargez vos images préférées.
+""")
 
-    # Afficher des statistiques descriptives
-    st.subheader("Statistiques descriptives")
-    st.write(data.describe())
+# Section Galerie
+st.header("🎨 Galerie d'Images")
+col1, col2, col3 = st.columns(3)
 
-# Section 2 : Visualisation
-st.header("2. Visualisation des Données")
-if uploaded_file is not None:
-    colonne = st.selectbox("Sélectionnez une colonne numérique pour visualisation :", data.select_dtypes(include="number").columns)
-    if colonne:
-        fig, ax = plt.subplots()
-        data[colonne].hist(ax=ax, bins=20, color="skyblue", edgecolor="black")
-        ax.set_title(f"Distribution de {colonne}")
-        ax.set_xlabel(colonne)
-        ax.set_ylabel("Fréquence")
-        st.pyplot(fig)
+# Charger les images du dossier
+chemin_images = "images"
+fichiers_images = [f for f in os.listdir(chemin_images) if f.endswith(('.png', '.jpg', '.jpeg'))]
 
-# Section 3 : Calcul Interactif
-st.header("3. Analyse Personnalisée")
-if uploaded_file is not None:
-    filtre_valeur = st.slider(f"Filtrer les valeurs de la colonne '{colonne}' :", min_value=float(data[colonne].min()), max_value=float(data[colonne].max()))
-    data_filtre = data[data[colonne] >= filtre_valeur]
-    st.write(f"Données après filtration sur '{colonne} ≥ {filtre_valeur}' :")
-    st.dataframe(data_filtre)
+# Affichage des images
+if fichiers_images:
+    for index, fichier in enumerate(fichiers_images):
+        image = Image.open(os.path.join(chemin_images, fichier))
+        with [col1, col2, col3][index % 3]:  # Affiche les images en colonnes
+            st.image(image, use_column_width=True)
+            st.caption(fichier)
+            st.download_button(
+                label="📥 Télécharger",
+                data=open(os.path.join(chemin_images, fichier), "rb").read(),
+                file_name=fichier,
+                mime="image/png"
+            )
+else:
+    st.write("Aucune image disponible dans la galerie. Ajoutez des images dans le dossier `images` pour les afficher ici.")
 
-    # Export des données filtrées
-    st.download_button(
-        label="Télécharger les données filtrées",
-        data=data_filtre.to_csv(index=False),
-        file_name="donnees_filtrees.csv",
-        mime="text/csv",
-    )
+# Section Génération d'Images (Optionnel)
+st.header("🤖 Générer une Nouvelle Image")
+st.markdown("""
+Vous voulez générer une nouvelle image ? Cliquez sur le bouton ci-dessous pour utiliser un modèle d'intelligence artificielle 
+et ajouter votre création à la galerie.
+""")
 
-# Section 4 : À propos
+if st.button("Générer une Image"):
+    from utils.generer_images import generer_image_ia  # Fonction personnalisée
+    nouvelle_image = generer_image_ia(chemin_images)
+    st.success(f"L'image `{nouvelle_image}` a été générée avec succès et ajoutée à la galerie !")
+
+# Pied de page
 st.sidebar.title("À propos")
-st.sidebar.info("Ceci est une application Streamlit de démonstration. Créée avec ❤️ et Python.")
+st.sidebar.info("Ce site est un exemple de vitrine d'images IA créée avec Streamlit. Contactez-nous pour plus d'informations.")
