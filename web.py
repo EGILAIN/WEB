@@ -16,31 +16,6 @@ def hide_streamlit_style():
     footer {visibility: hidden;}
     /* Cacher le bandeau de paramètres */
     header {visibility: hidden;}
-    /* Centrer le conteneur verticalement */
-    .stApp {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        height: 100vh;
-    }
-    /* Styles pour les boutons ronds */
-    .circle-button {
-        display: inline-block;
-        width: 150px;
-        height: 150px;
-        line-height: 150px;
-        border-radius: 50%;
-        background-color: #4CAF50;
-        color: white;
-        text-align: center;
-        font-size: 16px;
-        text-decoration: none;
-        margin: 10px;
-        cursor: pointer;
-    }
-    .circle-button:hover {
-        background-color: #45a049;
-    }
     </style>
     """
     st.markdown(hide_style, unsafe_allow_html=True)
@@ -60,44 +35,41 @@ def login_page():
         else:
             st.error("Veuillez entrer une adresse email valide.")
 
-# Fonction pour la page principale avec les boutons ronds
-def main_menu():
-    st.title("Tableau de Bord Principal")
+# Fonction pour la page principale avec le bandeau de navigation
+def main_app():
+    # Création du bandeau de navigation à gauche
+    st.sidebar.title("Navigation")
+    navigation = st.sidebar.radio("Aller à", ("Besoin client", "Proposition consultant", "Liste des profils", "Déconnexion"))
 
-    col1, col2, col3 = st.columns(3)
-
-    with col1:
-        if st.button("Besoin client", key="besoin_client"):
-            st.session_state['page'] = 'besoin_client'
-
-    with col2:
-        if st.button("Proposition consultant", key="proposition_consultant"):
-            st.session_state['page'] = 'proposition_consultant'
-
-    with col3:
-        if st.button("Liste des profils", key="liste_profils"):
-            st.session_state['page'] = 'liste_profils'
+    # Affichage du contenu en fonction de la sélection
+    if navigation == "Besoin client":
+        page_besoin_client()
+    elif navigation == "Proposition consultant":
+        page_proposition_consultant()
+    elif navigation == "Liste des profils":
+        page_liste_profils()
+    elif navigation == "Déconnexion":
+        st.session_state['authenticated'] = False
+        st.session_state['page'] = 'login'
+        st.experimental_rerun()
 
 # Fonction pour la page "Besoin client"
 def page_besoin_client():
     st.title("Besoin Client")
-    st.write("Contenu spécifique au module Besoin Client.")
-    if st.button("Retour au menu principal"):
-        st.session_state['page'] = 'main_menu'
+    st.write("Contenu spécifique au module **Besoin Client**.")
+    # Ajoutez ici les fonctionnalités spécifiques à ce module
 
 # Fonction pour la page "Proposition consultant"
 def page_proposition_consultant():
     st.title("Proposition Consultant")
-    st.write("Contenu spécifique au module Proposition Consultant.")
-    if st.button("Retour au menu principal"):
-        st.session_state['page'] = 'main_menu'
+    st.write("Contenu spécifique au module **Proposition Consultant**.")
+    # Ajoutez ici les fonctionnalités spécifiques à ce module
 
 # Fonction pour la page "Liste des profils"
 def page_liste_profils():
     st.title("Liste des Profils")
-    st.write("Contenu spécifique au module Liste des Profils.")
-    if st.button("Retour au menu principal"):
-        st.session_state['page'] = 'main_menu'
+    st.write("Contenu spécifique au module **Liste des Profils**.")
+    # Ajoutez ici les fonctionnalités spécifiques à ce module
 
 # Fonction principale
 def main():
@@ -114,23 +86,14 @@ def main():
     # Initialiser les variables de session si elles n'existent pas
     if 'authenticated' not in st.session_state:
         st.session_state['authenticated'] = False
-    if 'page' not in st.session_state:
-        st.session_state['page'] = 'login'
+    if 'user_email' not in st.session_state:
+        st.session_state['user_email'] = ''
 
     # Navigation entre les pages
     if not st.session_state['authenticated']:
         login_page()
     else:
-        if st.session_state['page'] == 'main_menu':
-            main_menu()
-        elif st.session_state['page'] == 'besoin_client':
-            page_besoin_client()
-        elif st.session_state['page'] == 'proposition_consultant':
-            page_proposition_consultant()
-        elif st.session_state['page'] == 'liste_profils':
-            page_liste_profils()
-        else:
-            main_menu()
+        main_app()
 
 # Exécuter l'application
 if __name__ == "__main__":
