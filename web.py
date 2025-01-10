@@ -89,10 +89,22 @@ def page_proposition_consultant():
         with col1:
             st.markdown("<div class='section'>", unsafe_allow_html=True)
             st.markdown("<div class='section-header'>Responsable</div>", unsafe_allow_html=True)
-            responsable_associe = st.text_input("Associé", key="associe")
-            responsable_localisation = st.text_input("Localisation Responsable", key="localisation_responsable")
-            responsable_source = st.text_input("Source", key="source")
-            responsable_origine = st.text_input("Origine", key="origine")
+            responsable_associe = st.selectbox(
+                "Associé",
+                options=["CHS", "YLD", "JCA", "JBH", "Autres"],
+                key="associe"
+            )
+            responsable_siege = st.selectbox(
+                "Siège",
+                options=["Kleber", "Rochefort", "Montesson"],
+                key="siege"
+            )
+            responsable_source = st.selectbox(
+                "Source",
+                options=["Réseau social", "Bouche à oreille", "Relation client"],
+                key="source"
+            )
+            # Origine supprimé
             st.markdown("</div>", unsafe_allow_html=True)
 
         # Colonne Candidat
@@ -109,7 +121,15 @@ def page_proposition_consultant():
         with col3:
             st.markdown("<div class='section'>", unsafe_allow_html=True)
             st.markdown("<div class='section-header'>Poste</div>", unsafe_allow_html=True)
-            poste_metier = st.text_input("Métier", key="metier")
+            poste_metier = st.selectbox(
+                "Métier",
+                options=[
+                    "Comptabilité générale", "Comptabilité analytique", "Comptabilité auxiliaire",
+                    "Audit comptable", "Audit IT", "Contrôle de gestion", "Fiscalité",
+                    "Analyste data", "Ingénieur data", "Manager data", "Ressource humaine", "Consolidation"
+                ],
+                key="metier"
+            )
             poste_experience = st.number_input("Expérience (années)", min_value=0, step=1, key="experience")
             poste_taux = st.number_input("Taux (%)", min_value=0, max_value=100, step=1, key="taux")
             poste_localisation = st.text_input("Localisation Poste", key="localisation_poste")
@@ -119,10 +139,21 @@ def page_proposition_consultant():
         with col4:
             st.markdown("<div class='section'>", unsafe_allow_html=True)
             st.markdown("<div class='section-header'>Compétences</div>", unsafe_allow_html=True)
-            competence_metier = st.text_area("Compétences métier", key="competences_metier")
-            competence_generales = st.text_area("Compétences générales", key="competences_generales")
-            competence_techniques = st.text_area("Compétences techniques", key="competences_techniques")
-            competence_linguistiques = st.text_area("Compétences linguistiques", key="competences_linguistiques")
+            competence_generales = st.multiselect(
+                "Compétences générales",
+                options=["Informatique", "Comptabilité", "Finance", "Droit", "Système d'information", "Relationnel"],
+                key="competences_generales"
+            )
+            competence_techniques = st.multiselect(
+                "Compétences techniques",
+                options=["Exemple 1", "Exemple 2"],  # Liste à venir
+                key="competences_techniques"
+            )
+            competence_linguistiques = st.multiselect(
+                "Compétences linguistiques",
+                options=["Anglais", "Français", "Espagnol", "Russe", "Arabe", "Chinois"],
+                key="competences_linguistiques"
+            )
             st.markdown("</div>", unsafe_allow_html=True)
 
         # Bouton de soumission
@@ -137,9 +168,9 @@ def page_proposition_consultant():
                 proposition_data = {
                     "Responsable": {
                         "Associé": responsable_associe,
-                        "Localisation": responsable_localisation,
-                        "Source": responsable_source,
-                        "Origine": responsable_origine
+                        "Siège": responsable_siege,
+                        "Source": responsable_source
+                        # "Origine" supprimé
                     },
                     "Candidat": {
                         "Nom": candidat_nom,
@@ -154,7 +185,6 @@ def page_proposition_consultant():
                         "Localisation": poste_localisation
                     },
                     "Compétences": {
-                        "Compétences métier": competence_metier,
                         "Compétences générales": competence_generales,
                         "Compétences techniques": competence_techniques,
                         "Compétences linguistiques": competence_linguistiques
