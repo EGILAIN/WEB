@@ -76,34 +76,34 @@ def page_proposition_consultant():
         # Colonne Responsable
         with col1:
             st.header("Responsable")
-            responsable_associe = st.text_input("Associé")
-            responsable_localisation = st.text_input("Localisation")
-            responsable_source = st.text_input("Source")
-            responsable_origine = st.text_input("Origine")
+            responsable_associe = st.text_input("Associé", key="associe")
+            responsable_localisation = st.text_input("Localisation Responsable", key="localisation_responsable")
+            responsable_source = st.text_input("Source", key="source")
+            responsable_origine = st.text_input("Origine", key="origine")
 
         # Colonne Candidat
         with col2:
             st.header("Candidat")
-            candidat_nom = st.text_input("Nom")
-            candidat_prenom = st.text_input("Prénom")
-            candidat_email = st.text_input("Adresse mail")
-            candidat_telephone = st.text_input("Téléphone")
+            candidat_nom = st.text_input("Nom", key="nom")
+            candidat_prenom = st.text_input("Prénom", key="prenom")
+            candidat_email = st.text_input("Adresse mail", key="adresse_mail")
+            candidat_telephone = st.text_input("Téléphone", key="telephone")
 
         # Colonne Poste
         with col3:
             st.header("Poste")
-            poste_metier = st.text_input("Métier")
-            poste_experience = st.number_input("Expérience (années)", min_value=0, step=1)
-            poste_taux = st.number_input("Taux (%)", min_value=0, max_value=100, step=1)
-            poste_localisation = st.text_input("Localisation")
+            poste_metier = st.text_input("Métier", key="metier")
+            poste_experience = st.number_input("Expérience (années)", min_value=0, step=1, key="experience")
+            poste_taux = st.number_input("Taux (%)", min_value=0, max_value=100, step=1, key="taux")
+            poste_localisation = st.text_input("Localisation Poste", key="localisation_poste")
 
         # Colonne Compétences
         with col4:
             st.header("Compétences")
-            competence_metier = st.text_area("Compétences métier")
-            competence_generales = st.text_area("Compétences générales")
-            competence_techniques = st.text_area("Compétences techniques")
-            competence_linguistiques = st.text_area("Compétences linguistiques")
+            competence_metier = st.text_area("Compétences métier", key="competences_metier")
+            competence_generales = st.text_area("Compétences générales", key="competences_generales")
+            competence_techniques = st.text_area("Compétences techniques", key="competences_techniques")
+            competence_linguistiques = st.text_area("Compétences linguistiques", key="competences_linguistiques")
 
         # Bouton de soumission
         submitted = st.form_submit_button("Soumettre Proposition")
