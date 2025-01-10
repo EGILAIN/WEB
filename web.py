@@ -56,7 +56,7 @@ def login_page():
 def main_app():
     # Création du bandeau de navigation à gauche
     st.sidebar.title("Navigation")
-    navigation = st.sidebar.radio("Aller à", ("Besoin client", "Proposition consultant", "Liste des profils", "Déconnexion"))
+    navigation = st.sidebar.radio("Aller à", ("Besoin client", "Proposition consultant", "Liste des profils", "Suivi d'activité", "Déconnexion"))
 
     # Affichage du contenu en fonction de la sélection
     if navigation == "Besoin client":
@@ -65,6 +65,8 @@ def main_app():
         page_proposition_consultant()
     elif navigation == "Liste des profils":
         page_liste_profils()
+    elif navigation == "Suivi d'activité":
+        page_suivi_activite()
     elif navigation == "Déconnexion":
         st.session_state['authenticated'] = False
         st.session_state['user_email'] = ''
@@ -191,40 +193,89 @@ def page_proposition_consultant():
                     }
                 }
 
-                # Ici, vous pouvez ajouter la logique pour enregistrer les données, par exemple dans une base de données ou un fichier
+                # Initialiser la liste des propositions si elle n'existe pas
+                if 'proposals' not in st.session_state:
+                    st.session_state['proposals'] = []
+
+                # Ajouter la nouvelle proposition à la liste
+                st.session_state['proposals'].append(proposition_data)
+
+                # Récapitulatif numéroté des propositions
                 st.success("Proposition Consultant soumise avec succès !")
-                st.json(proposition_data)  # Affiche les données soumises pour vérification
+                st.markdown("### Récapitulatif des Propositions")
+                for idx, proposal in enumerate(st.session_state['proposals'], 1):
+                    st.markdown(f"**{idx}. Responsable :** {proposal['Responsable']['Associé']}")
+                    st.markdown(f"- **Siège :** {proposal['Responsable']['Siège']}")
+                    st.markdown(f"- **Source :** {proposal['Responsable']['Source']}")
+                    st.markdown(f"**Candidat :** {proposal['Candidat']['Nom']} {proposal['Candidat']['Prénom']}")
+                    st.markdown(f"- **Adresse mail :** {proposal['Candidat']['Adresse mail']}")
+                    st.markdown(f"- **Téléphone :** {proposal['Candidat']['Téléphone']}")
+                    st.markdown(f"**Poste :** {proposal['Poste']['Métier']}")
+                    st.markdown(f"- **Expérience :** {proposal['Poste']['Expérience']} ans")
+                    st.markdown(f"- **Taux :** {proposal['Poste']['Taux']}%")
+                    st.markdown(f"- **Localisation :** {proposal['Poste']['Localisation']}")
+                    st.markdown(f"**Compétences Générales :** {', '.join(proposal['Compétences']['Compétences générales'])}")
+                    st.markdown(f"**Compétences Techniques :** {', '.join(proposal['Compétences']['Compétences techniques'])}")
+                    st.markdown(f"**Compétences Linguistiques :** {', '.join(proposal['Compétences']['Compétences linguistiques'])}")
+                    st.markdown("---")
 
-# Fonction pour la page "Liste des profils"
-def page_liste_profils():
-    st.title("Liste des Profils")
-    st.write("Contenu spécifique au module **Liste des Profils**.")
-    # Ajoutez ici les fonctionnalités spécifiques à ce module
+    # Fonction pour la page "Liste des profils"
+    def page_liste_profils():
+        st.title("Liste des Profils")
+        st.write("Contenu spécifique au module **Liste des Profils**.")
+        # Ajoutez ici les fonctionnalités spécifiques à ce module
 
-# Fonction principale
-def main():
-    # Configuration de la page (doit être la première commande)
-    st.set_page_config(
-        page_title="Application Multi-Modules",
-        page_icon="🔒",
-        layout="wide",
-    )
+    # Fonction pour la page "Suivi d'activité"
+    def page_suivi_activite():
+        st.title("Suivi d'Activité")
+        st.write("Voici la liste des propositions soumises :")
 
-    # Appliquer le style pour masquer les éléments indésirables et ajouter des bordures
-    hide_streamlit_style()
+        if 'proposals' not in st.session_state or not st.session_state['proposals']:
+            st.info("Aucune proposition n'a été soumise pour le moment.")
+        else:
+            for idx, proposal in enumerate(st.session_state['proposals'], 1):
+                st.markdown(f"### Proposition {idx}")
+                st.markdown(f"**Responsable :** {proposal['Responsable']['Associé']}")
+                st.markdown(f"- **Siège :** {proposal['Responsable']['Siège']}")
+                st.markdown(f"- **Source :** {proposal['Responsable']['Source']}")
+                st.markdown(f"**Candidat :** {proposal['Candidat']['Nom']} {proposal['Candidat']['Prénom']}")
+                st.markdown(f"- **Adresse mail :** {proposal['Candidat']['Adresse mail']}")
+                st.markdown(f"- **Téléphone :** {proposal['Candidat']['Téléphone']}")
+                st.markdown(f"**Poste :** {proposal['Poste']['Métier']}")
+                st.markdown(f"- **Expérience :** {proposal['Poste']['Expérience']} ans")
+                st.markdown(f"- **Taux :** {proposal['Poste']['Taux']}%")
+                st.markdown(f"- **Localisation :** {proposal['Poste']['Localisation']}")
+                st.markdown(f"**Compétences Générales :** {', '.join(proposal['Compétences']['Compétences générales'])}")
+                st.markdown(f"**Compétences Techniques :** {', '.join(proposal['Compétences']['Compétences techniques'])}")
+                st.markdown(f"**Compétences Linguistiques :** {', '.join(proposal['Compétences']['Compétences linguistiques'])}")
+                st.markdown("---")
 
-    # Initialiser les variables de session si elles n'existent pas
-    if 'authenticated' not in st.session_state:
-        st.session_state['authenticated'] = False
-    if 'user_email' not in st.session_state:
-        st.session_state['user_email'] = ''
+    # Fonction principale
+    def main():
+        # Configuration de la page (doit être la première commande)
+        st.set_page_config(
+            page_title="Application Multi-Modules",
+            page_icon="🔒",
+            layout="wide",
+        )
 
-    # Navigation entre les pages
-    if not st.session_state['authenticated']:
-        login_page()
-    else:
-        main_app()
+        # Appliquer le style pour masquer les éléments indésirables et ajouter des bordures
+        hide_streamlit_style()
 
-# Exécuter l'application
-if __name__ == "__main__":
-    main()
+        # Initialiser les variables de session si elles n'existent pas
+        if 'authenticated' not in st.session_state:
+            st.session_state['authenticated'] = False
+        if 'user_email' not in st.session_state:
+            st.session_state['user_email'] = ''
+        if 'proposals' not in st.session_state:
+            st.session_state['proposals'] = []
+
+        # Navigation entre les pages
+        if not st.session_state['authenticated']:
+            login_page()
+        else:
+            main_app()
+
+    # Exécuter l'application
+    if __name__ == "__main__":
+        main()
