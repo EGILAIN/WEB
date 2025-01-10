@@ -1,35 +1,46 @@
 import streamlit as st
 
-# Fonction pour cacher le menu et le footer de Streamlit
-def hide_streamlit_style():
-    hide_style = """
-            <style>
-            /* Cacher le menu hamburger en haut à droite */
-            #MainMenu {visibility: hidden;}
-            /* Cacher le footer "Made with Streamlit" */
-            footer {visibility: hidden;}
-            /* Cacher la barre de défilement à gauche (si présente) */
-            /* Aucun élément par défaut à cacher ici */
-            </style>
-            """
-    st.markdown(hide_style, unsafe_allow_html=True)
-
 def main():
-    # Appliquer le style pour masquer les éléments indésirables
-    hide_streamlit_style()
+    # **1. Configuration de la page** (DOIT être la première commande Streamlit)
+    st.set_page_config(
+        page_title="Page d'Accueil",
+        page_icon="🔒",
+        layout="centered",
+    )
 
-    # Configurer la page pour utiliser tout l'espace disponible
-    st.set_page_config(page_title="Page d'Accueil", page_icon="🔒", layout="centered")
+    # **2. Masquer le menu hamburger et le footer de Streamlit**
+    hide_streamlit_style = """
+                <style>
+                /* Cacher le menu hamburger en haut à droite */
+                #MainMenu {visibility: hidden;}
+                /* Cacher le footer "Made with Streamlit" */
+                footer {visibility: hidden;}
+                /* Cacher le bandeau de paramètres */
+                header {visibility: hidden;}
+                /* Centrer le conteneur verticalement */
+                .stApp {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    height: 100vh;
+                }
+                /* Personnaliser le conteneur */
+                .container {
+                    text-align: center;
+                }
+                </style>
+                """
+    st.markdown(hide_streamlit_style, unsafe_allow_html=True)
 
-    # Créer un conteneur central pour le formulaire de connexion
+    # **3. Conteneur central pour le formulaire de connexion**
     with st.container():
-        st.title("Bienvenue sur Mon Application")
-        st.write("Veuillez vous connecter en entrant votre adresse email.")
+        st.title("Bienvenue")
+        st.subheader("Veuillez entrer votre adresse email pour vous connecter")
 
         # Champ de saisie pour l'email
         email = st.text_input("Adresse Email", type="email")
 
-        # Bouton de connexion
+        # Bouton de soumission
         if st.button("Se Connecter"):
             if email:
                 # Ici, vous pouvez ajouter la logique de vérification de l'email
