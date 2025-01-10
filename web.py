@@ -51,7 +51,7 @@ def main_app():
     elif navigation == "Déconnexion":
         st.session_state['authenticated'] = False
         st.session_state['page'] = 'login'
-        st.experimental_rerun()
+        st.rerun()
 
 # Fonction pour la page "Besoin client"
 def page_besoin_client():
