@@ -16,6 +16,10 @@ def hide_streamlit_style():
     footer {visibility: hidden;}
     /* Cacher le bandeau de paramètres */
     header {visibility: hidden;}
+    /* Ajouter un fond légèrement gris pour le conteneur principal */
+    .stApp {
+        background-color: #f0f2f6;
+    }
     </style>
     """
     st.markdown(hide_style, unsafe_allow_html=True)
@@ -32,6 +36,7 @@ def login_page():
             st.session_state['authenticated'] = True
             st.session_state['user_email'] = email
             st.success(f"Connexion réussie avec l'adresse {email}!")
+            st.experimental_rerun()
         else:
             st.error("Veuillez entrer une adresse email valide.")
 
@@ -50,8 +55,8 @@ def main_app():
         page_liste_profils()
     elif navigation == "Déconnexion":
         st.session_state['authenticated'] = False
-        st.session_state['page'] = 'login'
-        st.rerun()
+        st.session_state['user_email'] = ''
+        st.experimental_rerun()
 
 # Fonction pour la page "Besoin client"
 def page_besoin_client():
@@ -62,8 +67,83 @@ def page_besoin_client():
 # Fonction pour la page "Proposition consultant"
 def page_proposition_consultant():
     st.title("Proposition Consultant")
-    st.write("Contenu spécifique au module **Proposition Consultant**.")
-    # Ajoutez ici les fonctionnalités spécifiques à ce module
+    st.write("Veuillez remplir les informations suivantes :")
+
+    with st.form("proposition_consultant_form"):
+        # Création de quatre colonnes
+        col1, col2, col3, col4 = st.columns(4)
+
+        # Colonne Responsable
+        with col1:
+            st.header("Responsable")
+            responsable_associe = st.text_input("Associé")
+            responsable_localisation = st.text_input("Localisation")
+            responsable_source = st.text_input("Source")
+            responsable_origine = st.text_input("Origine")
+
+        # Colonne Candidat
+        with col2:
+            st.header("Candidat")
+            candidat_nom = st.text_input("Nom")
+            candidat_prenom = st.text_input("Prénom")
+            candidat_email = st.text_input("Adresse mail")
+            candidat_telephone = st.text_input("Téléphone")
+
+        # Colonne Poste
+        with col3:
+            st.header("Poste")
+            poste_metier = st.text_input("Métier")
+            poste_experience = st.number_input("Expérience (années)", min_value=0, step=1)
+            poste_taux = st.number_input("Taux (%)", min_value=0, max_value=100, step=1)
+            poste_localisation = st.text_input("Localisation")
+
+        # Colonne Compétences
+        with col4:
+            st.header("Compétences")
+            competence_metier = st.text_area("Compétences métier")
+            competence_generales = st.text_area("Compétences générales")
+            competence_techniques = st.text_area("Compétences techniques")
+            competence_linguistiques = st.text_area("Compétences linguistiques")
+
+        # Bouton de soumission
+        submitted = st.form_submit_button("Soumettre Proposition")
+
+        if submitted:
+            # Validation simple des champs requis
+            if not (responsable_associe and candidat_nom and poste_metier):
+                st.error("Veuillez remplir les champs obligatoires (Associé, Nom, Métier).")
+            else:
+                # Traitement des données du formulaire
+                proposition_data = {
+                    "Responsable": {
+                        "Associé": responsable_associe,
+                        "Localisation": responsable_localisation,
+                        "Source": responsable_source,
+                        "Origine": responsable_origine
+                    },
+                    "Candidat": {
+                        "Nom": candidat_nom,
+                        "Prénom": candidat_prenom,
+                        "Adresse mail": candidat_email,
+                        "Téléphone": candidat_telephone
+                    },
+                    "Poste": {
+                        "Métier": poste_metier,
+                        "Expérience": poste_experience,
+                        "Taux": poste_taux,
+                        "Localisation": poste_localisation
+                    },
+                    "Compétences": {
+                        "Compétences métier": competence_metier,
+                        "Compétences générales": competence_generales,
+                        "Compétences techniques": competence_techniques,
+                        "Compétences linguistiques": competence_linguistiques
+                    }
+                }
+
+                # Ici, vous pouvez ajouter la logique pour enregistrer les données, par exemple dans une base de données ou un fichier
+                st.success("Proposition Consultant soumise avec succès !")
+                st.json(proposition_data)  # Affiche les données soumises pour vérification
 
 # Fonction pour la page "Liste des profils"
 def page_liste_profils():
