@@ -17,7 +17,7 @@ def hide_streamlit_style():
     /* Cacher le bandeau de paramètres */
     header {visibility: hidden;}
     
-    /* Ajouter des bordures autour des sections */
+    /* Styles pour les sections avec bordure */
     .section {
         border: 1px solid #ccc;
         border-radius: 10px;
